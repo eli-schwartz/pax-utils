@@ -28,8 +28,11 @@ jobs:
         python -m pip install "${pkgs[@]}"
     - run: pylint --output-format colorized lddtree.py
     - run: mypy lddtree.py
+      if: success() || failure()
       env:
         TERM: xterm-color
         MYPY_FORCE_COLOR: 1
     - run: black --check --diff --color lddtree.py
+      if: success() || failure()
     - run: isort --check --diff --color lddtree.py
+      if: success() || failure()
