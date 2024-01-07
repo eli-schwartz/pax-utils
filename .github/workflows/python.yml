@@ -5,6 +5,11 @@ name: Python
 
 on: [push, pull_request]
 
+env:
+  # Reusable list of files to check -- parsed by bash, so does not support
+  # whitespace.
+  CHECK_FILES: lddtree.py pylint
+
 jobs:
   python:
     runs-on: ubuntu-latest
@@ -26,13 +31,13 @@ jobs:
           argcomplete
         )
         python -m pip install "${pkgs[@]}"
-    - run: pylint --output-format colorized lddtree.py
-    - run: mypy lddtree.py
+    - run: pylint --output-format colorized $CHECK_FILES
+    - run: mypy $CHECK_FILES
       if: success() || failure()
       env:
         TERM: xterm-color
         MYPY_FORCE_COLOR: 1
-    - run: black --check --diff --color lddtree.py
+    - run: black --check --diff --color $CHECK_FILES
       if: success() || failure()
-    - run: isort --check --diff --color lddtree.py
+    - run: isort --check --diff --color $CHECK_FILES
       if: success() || failure()
